@@ -24,21 +24,38 @@ import pandas as pd
 from ktbench.models.base import KTModel, explode_skills, fuse
 
 EPS = 1e-6
+MAX_CELLS = 2_000_000  # padded (sequences x steps) per chunk; bounds memory on EdNet
 
 
-def pad_by_skill(ex: pd.DataFrame):
-    """Yield (skill, obs, mask, ex_index) with one padded row per (student, skill) sequence."""
+def pad_by_skill(ex: pd.DataFrame, max_cells: int | None = None):
+    """Yield (skill, chunks) where each chunk is (obs, mask, ex_index), one padded row per
+    (student, skill) sequence. Sequences are sorted by length and grouped so that no chunk
+    pads more than ``max_cells`` cells."""
+    max_cells = max_cells or MAX_CELLS
     ex = ex.assign(_i=np.arange(len(ex)))
     for skill, g in ex.groupby("skill", sort=True):
         seq = pd.factorize(g["user_id"])[0]
         pos = g.groupby("user_id", sort=False).cumcount().to_numpy()
-        obs = np.zeros((seq.max() + 1, pos.max() + 1))
-        mask = np.zeros_like(obs, dtype=bool)
-        idx = np.full(obs.shape, -1, dtype=np.int64)
-        obs[seq, pos] = g["correct"].to_numpy()
-        mask[seq, pos] = True
-        idx[seq, pos] = g["_i"].to_numpy()
-        yield int(skill), obs, mask, idx
+        lengths = np.bincount(seq)
+        order = np.argsort(-lengths, kind="stable")
+        chunks, start = [], 0
+        while start < len(order):
+            width = lengths[order[start]]
+            stop = start + max(1, max_cells // width)
+            members = order[start:stop]
+            slot = np.full(len(lengths), -1)
+            slot[members] = np.arange(len(members))
+            sel = slot[seq] >= 0
+            obs = np.zeros((len(members), width))
+            mask = np.zeros_like(obs, dtype=bool)
+            idx = np.full(obs.shape, -1, dtype=np.int64)
+            r, c = slot[seq[sel]], pos[sel]
+            obs[r, c] = g["correct"].to_numpy()[sel]
+            mask[r, c] = True
+            idx[r, c] = g["_i"].to_numpy()[sel]
+            chunks.append((obs, mask, idx))
+            start = stop
+        yield int(skill), chunks
 
 
 def forward(obs: np.ndarray, mask: np.ndarray, prior, learn, guess, slip, forget=0.0):
@@ -61,8 +78,8 @@ def forward(obs: np.ndarray, mask: np.ndarray, prior, learn, guess, slip, forget
     return p_known, p_correct, loglik
 
 
-def em_step(obs, mask, prior, learn, guess, slip, forget, fit_forget):
-    """One Baum-Welch iteration with per-step scaling. Returns new params and the log-likelihood."""
+def e_step(obs, mask, prior, learn, guess, slip, forget):
+    """Baum-Welch expected counts for one chunk, with per-step scaling."""
     n, T = obs.shape
     A = np.array([[1 - learn, learn], [forget, 1 - forget]])  # rows: from unknown, known
     emit1 = np.array([guess, 1 - slip])  # P(correct | state)
@@ -96,40 +113,45 @@ def em_step(obs, mask, prior, learn, guess, slip, forget, fit_forget):
 
     gamma = alpha * beta
     gamma /= gamma.sum(-1, keepdims=True)
-    g = gamma[mask]  # (n_obs, 2)
-    o = obs[mask]
-    # Expected time in each state at steps that have a next step.
+    g, o = gamma[mask], obs[mask]
     has_next = np.zeros_like(mask)
     has_next[:, :-1] = mask[:, 1:]
-    from_state = gamma[has_next].sum(0)
+    return {
+        "first_known": gamma[:, 0, 1].sum(),
+        "n_seq": n,
+        "trans": trans,
+        "from_state": gamma[has_next].sum(0),  # expected time in each state before a next step
+        "guess": np.array([(g[:, 0] * o).sum(), g[:, 0].sum()]),
+        "slip": np.array([(g[:, 1] * (1 - o)).sum(), g[:, 1].sum()]),
+        "loglik": np.log(scale[mask]).sum(),
+    }
 
-    new_prior = gamma[:, 0, 1].mean()
-    new_learn = trans[0, 1] / max(from_state[0], EPS)
-    new_forget = trans[1, 0] / max(from_state[1], EPS) if fit_forget else 0.0
-    new_guess = (g[:, 0] * o).sum() / max(g[:, 0].sum(), EPS)
-    new_slip = (g[:, 1] * (1 - o)).sum() / max(g[:, 1].sum(), EPS)
-    loglik = np.log(scale[mask]).sum()
-    return new_prior, new_learn, new_guess, new_slip, new_forget, loglik
+
+def m_step(stats: list[dict], fit_forget: bool):
+    s = {k: sum(d[k] for d in stats) for k in stats[0]}
+    prior = s["first_known"] / s["n_seq"]
+    learn = s["trans"][0, 1] / max(s["from_state"][0], EPS)
+    forget = s["trans"][1, 0] / max(s["from_state"][1], EPS) if fit_forget else 0.0
+    guess = s["guess"][0] / max(s["guess"][1], EPS)
+    slip = s["slip"][0] / max(s["slip"][1], EPS)
+    return [prior, learn, guess, slip, forget], s["loglik"]
 
 
-def fit_skill(obs, mask, rng, num_fits=5, max_iter=100, tol=1e-4, fit_forget=False,
-              max_guess=0.5, max_slip=0.5):
+def fit_skill(chunks, rng, num_fits=5, max_iter=100, tol=1e-4, fit_forget=False, max_guess=0.5, max_slip=0.5):
     best = None
     for _ in range(num_fits):
         params = [rng.uniform(0.1, 0.8), rng.uniform(0.05, 0.4), rng.uniform(0.05, 0.3),
                   rng.uniform(0.05, 0.3), rng.uniform(0.0, 0.1) if fit_forget else 0.0]
         prev = -np.inf
         for _ in range(max_iter):
-            *params, ll = em_step(obs, mask, *params, fit_forget)
-            params[0] = float(np.clip(params[0], EPS, 1 - EPS))
-            params[1] = float(np.clip(params[1], EPS, 1 - EPS))
-            params[2] = float(np.clip(params[2], EPS, max_guess))
-            params[3] = float(np.clip(params[3], EPS, max_slip))
-            params[4] = float(np.clip(params[4], 0.0, 1 - EPS))
+            params, ll = m_step([e_step(obs, mask, *params) for obs, mask, _ in chunks], fit_forget)
+            params = [float(np.clip(params[0], EPS, 1 - EPS)), float(np.clip(params[1], EPS, 1 - EPS)),
+                      float(np.clip(params[2], EPS, max_guess)), float(np.clip(params[3], EPS, max_slip)),
+                      float(np.clip(params[4], 0.0, 1 - EPS))]
             if ll - prev < tol * max(1.0, abs(ll)):
                 break
             prev = ll
-        _, _, ll = forward(obs, mask, *params)
+        ll = sum(forward(obs, mask, *params)[2] for obs, mask, _ in chunks)
         if best is None or ll > best[1]:
             best = (params, ll)
     return best[0]
@@ -143,9 +165,9 @@ class BKT(KTModel):
         rng = np.random.default_rng(int(p.get("seed", 0)))
         self.global_rate = float(train["correct"].mean())
         self.skill_params: dict[int, list[float]] = {}
-        for skill, obs, mask, _ in pad_by_skill(explode_skills(train)):
+        for skill, chunks in pad_by_skill(explode_skills(train)):
             self.skill_params[skill] = fit_skill(
-                obs, mask, rng,
+                chunks, rng,
                 num_fits=int(p.get("num_fits", 5)),
                 max_iter=int(p.get("max_iter", 100)),
                 fit_forget=bool(p.get("forgets", False)),
@@ -157,8 +179,10 @@ class BKT(KTModel):
     def predict(self, df: pd.DataFrame) -> np.ndarray:
         ex = explode_skills(df)
         out = np.full(len(ex), self.global_rate)
-        for skill, obs, mask, idx in pad_by_skill(ex):
-            if skill in self.skill_params:
+        for skill, chunks in pad_by_skill(ex):
+            if skill not in self.skill_params:
+                continue
+            for obs, mask, idx in chunks:
                 _, pc, _ = forward(obs, mask, *self.skill_params[skill])
                 out[idx[mask]] = pc[mask]
         return fuse(ex["row"].to_numpy(), out, len(df))

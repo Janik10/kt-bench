@@ -50,3 +50,15 @@ def test_pfa_counts_only_earlier_answers():
     succ, fail = prior_counts(explode_skills(df))
     assert succ.tolist() == [0, 1, 1, 2]
     assert fail.tolist() == [0, 0, 1, 1]
+
+
+def test_bkt_chunking_does_not_change_the_fit(dataset, split, monkeypatch):
+    from ktbench.models import bkt
+
+    _, meta = dataset
+    one = models.build("bkt", meta.n_skills, meta.n_items, seed=0, num_fits=1).fit(split.train)
+    monkeypatch.setattr(bkt, "MAX_CELLS", 50)  # force many small chunks per skill
+    many = models.build("bkt", meta.n_skills, meta.n_items, seed=0, num_fits=1).fit(split.train)
+    for skill, params in one.skill_params.items():
+        np.testing.assert_allclose(many.skill_params[skill], params, rtol=1e-6)
+    np.testing.assert_allclose(many.predict(split.test), one.predict(split.test), rtol=1e-6)

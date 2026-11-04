@@ -80,11 +80,13 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--results-dir", type=Path, default=Path("results"))
     ap.add_argument("--preds-dir", type=Path, default=Path("runs"))
     ap.add_argument("--no-tuned", action="store_true", help="ignore tuning.json even if present")
+    ap.add_argument("--split-seed", type=int, default=splits.DEFAULT_SEED,
+                    help="draw a different 20%% test set (for split-variance checks only)")
     args = ap.parse_args(argv)
 
     cfg = load_config(args.config, args.set)
     df, meta, data_path = datasets.load(cfg["dataset"], args.data_dir)
-    folds = splits.load_or_create(df, data_path)
+    folds = splits.load_or_create(df, data_path, seed=args.split_seed)
     params = dict(cfg["params"])
     if not args.no_tuned:
         params.update(tuned_params(cfg, args.results_dir))

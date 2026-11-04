@@ -48,13 +48,18 @@ def make_split(df: pd.DataFrame, folds: pd.DataFrame, valid_fold: int) -> Split:
     )
 
 
-def load_or_create(df: pd.DataFrame, data_dir: Path, **kwargs) -> pd.DataFrame:
-    path = data_dir / "folds.parquet"
+DEFAULT_SEED = 42
+
+
+def load_or_create(df: pd.DataFrame, data_dir: Path, seed: int = DEFAULT_SEED, **kwargs) -> pd.DataFrame:
+    """The benchmark split (seed 42) lives in ``folds.parquet``; other seeds, used only to
+    measure how much the test-set draw moves the numbers, in ``folds_seed<s>.parquet``."""
+    path = data_dir / ("folds.parquet" if seed == DEFAULT_SEED else f"folds_seed{seed}.parquet")
     if path.exists():
         folds = pd.read_parquet(path)
         if set(folds["user_id"]) != set(df["user_id"].unique()):
             raise ValueError(f"{path} does not match the dataset; delete it to regenerate")
         return folds
-    folds = assign(df["user_id"].to_numpy(), **kwargs)
+    folds = assign(df["user_id"].to_numpy(), seed=seed, **kwargs)
     folds.to_parquet(path, index=False)
     return folds

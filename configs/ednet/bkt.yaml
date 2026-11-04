@@ -1,0 +1,9 @@
+dataset: ednet
+model: bkt
+runs: 5
+params:
+  num_fits: 2
+  max_iter: 30
+  forgets: false
+search:
+  forgets: [false, true]

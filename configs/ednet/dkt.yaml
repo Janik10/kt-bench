@@ -1,0 +1,21 @@
+dataset: ednet
+model: dkt
+runs: 5
+params:
+  emb_size: 200
+  hidden_size: 200
+  n_layers: 1
+  dropout: 0.2
+  lr: 0.001
+  batch_size: 128
+  max_len: 200
+  max_epochs: 30
+  patience: 3
+  # Some EdNet students have tens of thousands of answers; score them in
+  # overlapping 1,000-token windows instead of one giant sequence.
+  eval_max_len: 1000
+  eval_stride: 500
+search:
+  hidden_size: [100, 200]
+  dropout: [0.1, 0.2, 0.3]
+  lr: [0.001, 0.0005]

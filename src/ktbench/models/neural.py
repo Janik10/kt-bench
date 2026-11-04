@@ -99,8 +99,9 @@ class SequenceModel(KTModel):
     @torch.no_grad()
     def predict(self, df: pd.DataFrame) -> np.ndarray:
         self.net.eval()
-        stride = self.params.get("eval_stride") or (self.eval_max_len // 2 if self.eval_max_len else None)
-        windows = sequences.eval_windows(df, self.eval_max_len, stride)
+        max_len = self.params.get("eval_max_len", self.eval_max_len)
+        stride = self.params.get("eval_stride") or (max_len // 2 if max_len else None)
+        windows = sequences.eval_windows(df, max_len, stride)
         windows.sort(key=lambda w: len(w.skill))
         n_ex = int(df["skills"].map(len).sum())
         p_ex = np.full(n_ex, np.nan)

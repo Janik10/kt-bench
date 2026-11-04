@@ -1,0 +1,13 @@
+# Bayesian Beta baseline with the prior and the evidence half-life (in days) tuned on validation only.
+dataset: ednet
+model: beta
+runs: 5
+params:
+  prior: skill
+  prior_strength: 2.0
+  half_life: 10
+  decay_unit: days
+search:
+  prior: [fixed, skill]
+  prior_strength: [1.0, 2.0, 4.0, 8.0]
+  half_life: [null, 1, 3, 10, 23.1, 60]

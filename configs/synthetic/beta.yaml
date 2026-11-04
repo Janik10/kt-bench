@@ -1,0 +1,4 @@
+dataset: synthetic
+model: beta
+runs: 2
+params: {}

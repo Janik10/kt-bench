@@ -1,0 +1,4 @@
+dataset: synthetic
+model: bkt
+runs: 2
+params: {}

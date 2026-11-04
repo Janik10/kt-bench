@@ -1,0 +1,9 @@
+dataset: assist2009
+model: bkt
+runs: 5
+params:
+  num_fits: 5
+  forgets: false
+search:
+  num_fits: [1, 5]
+  forgets: [false, true]

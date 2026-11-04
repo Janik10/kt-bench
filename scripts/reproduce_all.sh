@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Reproduce every number in the README.
+#
+#   bash scripts/reproduce_all.sh               # ASSISTments 2009, every model, 5 runs each
+#   bash scripts/reproduce_all.sh assist2009 ednet
+#   bash scripts/reproduce_all.sh synthetic     # tiny fixture, what CI runs
+#
+# Set TUNE=1 to rerun the validation-only hyperparameter search first
+# (TRIALS=n, default 12). Without it, the committed tuning.json files are used.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+PY=${PYTHON:-python}
+DATASETS=${*:-assist2009}
+TRIALS=${TRIALS:-12}
+
+for ds in $DATASETS; do
+  results=results
+  preds=runs
+  if [ "$ds" = synthetic ]; then
+    # Keep CI output out of the committed results.
+    results=runs/ci/results
+    preds=runs/ci/preds
+  fi
+  for cfg in configs/"$ds"/*.yaml; do
+    if [ "${TUNE:-0}" = 1 ] && grep -q '^search:' "$cfg"; then
+      $PY -m ktbench.tune "$cfg" --trials "$TRIALS" --results-dir "$results"
+    fi
+    $PY -m ktbench.train "$cfg" --results-dir "$results" --preds-dir "$preds"
+  done
+  $PY -m ktbench.analysis.calibration "$ds" --preds-dir "$preds" \
+    --out "$( [ "$ds" = synthetic ] && echo runs/ci || echo report/figures )/calibration_$ds.png"
+  $PY -m ktbench.report --results-dir "$results"
+done

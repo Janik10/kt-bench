@@ -1,0 +1,4 @@
+dataset: synthetic
+model: skill_avg
+runs: 2
+params: {}

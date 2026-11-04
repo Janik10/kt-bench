@@ -1,0 +1,5 @@
+dataset: assist2009
+model: skill_avg
+runs: 5
+params:
+  smoothing: 1.0

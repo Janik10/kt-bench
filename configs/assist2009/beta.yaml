@@ -1,0 +1,14 @@
+# Bayesian Beta baseline with the prior and the evidence half-life tuned on validation only.
+# The half-life is in answers (steps) because ASSISTments 2009 has no timestamps.
+dataset: assist2009
+model: beta
+runs: 5
+params:
+  prior: skill
+  prior_strength: 2.0
+  half_life: 10
+  decay_unit: steps
+search:
+  prior: [fixed, skill]
+  prior_strength: [1.0, 2.0, 4.0, 8.0]
+  half_life: [null, 3, 5, 10, 20, 50]

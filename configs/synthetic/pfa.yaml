@@ -1,0 +1,4 @@
+dataset: synthetic
+model: pfa
+runs: 2
+params: {}

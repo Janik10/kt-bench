@@ -1,0 +1,9 @@
+dataset: synthetic
+model: dkt
+runs: 2
+params:
+  hidden_size: 32
+  emb_size: 32
+  max_epochs: 3
+  device: cpu
+  verbose: false

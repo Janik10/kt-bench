@@ -1,0 +1,10 @@
+dataset: synthetic
+model: sakt
+runs: 2
+params:
+  emb_size: 32
+  n_heads: 4
+  max_len: 50
+  max_epochs: 3
+  device: cpu
+  verbose: false

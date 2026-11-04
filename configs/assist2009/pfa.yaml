@@ -1,0 +1,9 @@
+dataset: assist2009
+model: pfa
+runs: 5
+params:
+  C: 1.0
+  count_transform: raw
+search:
+  C: [0.01, 0.1, 1.0, 10.0]
+  count_transform: [raw, log1p]

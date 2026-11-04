@@ -218,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# kt-bench: never commit datasets or experiment logs
+/data/
+*.parquet
+*.csv
+wandb/
+runs/
+results/runs/
+*.log

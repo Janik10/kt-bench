@@ -1,6 +1,5 @@
-# Bayesian Beta baseline, default settings: Beta(1, 1) prior, unit evidence weight,
-# exp(-0.03 * days) recency. ASSISTments 2009 has no clock and a student's answers
-# land within minutes of each other, so production recency is ~1 and there is no decay.
+# Beta-posterior baseline with untuned defaults: Beta(1, 1) prior, unit evidence weight,
+# no decay. ASSISTments 2009 has no clock, so a time-based half-life cannot apply.
 dataset: assist2009
 model: beta
 runs: 5

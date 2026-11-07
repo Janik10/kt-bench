@@ -29,7 +29,7 @@ def _one_skill(correct, timestamp=None):
     )
 
 
-def test_beta_production_matches_hand_computed_posterior():
+def test_beta_default_matches_hand_computed_posterior():
     df = _one_skill([1, 1, 0, 1])
     m = models.build("beta", n_skills=1, n_items=1).fit(df)
     # Beta(1,1), then +1 alpha, +1 alpha, +1 beta: the posterior mean before each answer.

@@ -32,12 +32,12 @@ where each prediction may only use that student's earlier answers. One scorer
 | 0 | Skill average | Each skill's overall correct rate; the floor | [skill_avg.py](src/ktbench/models/skill_avg.py) |
 | 1 | BKT | Hidden known/unknown state per skill, fit by EM | [bkt.py](src/ktbench/models/bkt.py) |
 | 2 | PFA | Logistic regression on per-skill prior successes/failures | [pfa.py](src/ktbench/models/pfa.py) |
-| 3 | Bayesian Beta baseline | Per-skill Beta(α, β) counts of right/wrong answers with a decaying half-life | [beta.py](src/ktbench/models/beta.py) |
+| 3 | Beta posterior | Per-skill Beta(α, β) counts of right/wrong answers with a decaying half-life | [beta.py](src/ktbench/models/beta.py) |
 | 4 | DKT | LSTM over the answer history, written from scratch | [dkt.py](src/ktbench/models/dkt.py) |
 | 5 | SAKT | Self-attention over past answers, written from scratch | [sakt.py](src/ktbench/models/sakt.py) |
 
-The Bayesian Beta baseline is reported twice: with default settings, and with the
-prior and evidence half-life tuned on the validation fold.
+The Beta-posterior baseline is reported twice: with untuned defaults (Beta(1, 1)
+prior), and with the prior and evidence half-life tuned on the validation fold.
 
 ## Protocol
 

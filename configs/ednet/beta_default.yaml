@@ -1,5 +1,5 @@
-# Bayesian Beta baseline, default settings: Beta(1, 1) prior, unit evidence weight,
-# recency exp(-0.03 * days), i.e. a 23.1-day half-life on EdNet's real clock.
+# Beta-posterior baseline with untuned defaults: Beta(1, 1) prior, unit evidence weight,
+# evidence half-life of 23.1 days (decay rate 0.03 per day) on EdNet's real clock.
 dataset: ednet
 model: beta
 runs: 5

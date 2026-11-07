@@ -23,8 +23,8 @@ LABELS = {
     "skill_avg": "Skill average",
     "bkt": "BKT",
     "pfa": "PFA",
-    "beta_default": "Bayesian Beta baseline (default)",
-    "beta": "Bayesian Beta baseline (tuned)",
+    "beta_default": "Beta posterior (default)",
+    "beta": "Beta posterior (tuned)",
     "dkt": "DKT",
     "sakt": "SAKT",
 }

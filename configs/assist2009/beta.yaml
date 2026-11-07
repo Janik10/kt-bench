@@ -1,4 +1,4 @@
-# Bayesian Beta baseline with the prior and the evidence half-life tuned on validation only.
+# Beta-posterior baseline with the prior and the evidence half-life tuned on validation only.
 # The half-life is in answers (steps) because ASSISTments 2009 has no timestamps.
 dataset: assist2009
 model: beta

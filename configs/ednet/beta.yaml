@@ -1,4 +1,5 @@
-# Bayesian Beta baseline with the prior and the evidence half-life (in days) tuned on validation only.
+# Beta-posterior baseline with the prior and the evidence half-life tuned on validation only.
+# The half-life is in days.
 dataset: ednet
 model: beta
 runs: 5

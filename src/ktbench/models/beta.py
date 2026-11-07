@@ -1,18 +1,19 @@
-"""Model 3: a Bayesian Beta baseline.
+"""Model 3: a Bayesian Beta-posterior baseline.
 
-The Bayesian Beta baseline keeps, per student and topic, a Beta(alpha, beta) posterior
-starting from Beta(1, 1). Every graded answer adds ``weight * recency`` to alpha if right and to beta if wrong, with
-``recency = exp(-0.03 * days_since_answer)``, and mastery = alpha / (alpha + beta).
-Here mastery on a question's skill is the predicted chance of answering it
-right, and a multi-skill question averages its skills.
+Per student and skill, mastery is the mean of a Beta(alpha, beta) posterior.
+It starts from a prior and every answer adds ``weight * recency`` to alpha if
+right and to beta if wrong, where ``recency = 2 ** (-age / half_life)``
+discounts old evidence. The posterior mean alpha / (alpha + beta) before an
+answer is the predicted chance of getting it right, and a multi-skill
+question averages its skills. It is a counting model with forgetting: no
+hidden state, no learning-rate parameter, and almost nothing to fit.
 
 Parameters
 ----------
-prior        "fixed" uses Beta(prior_alpha, prior_beta) for every skill (production:
-             1, 1). "skill" centres each skill's prior on its training-set correct
-             rate with total pseudo-count ``prior_strength``.
-half_life    evidence half-life; null means no decay. Production's 0.03/day is
-             a half-life of ln 2 / 0.03 = 23.1 days.
+prior        "fixed" uses Beta(prior_alpha, prior_beta) for every skill (default 1, 1).
+             "skill" centres each skill's prior on its training-set correct rate
+             with total pseudo-count ``prior_strength``.
+half_life    evidence half-life; null means no decay.
 decay_unit   "days" (needs timestamps) or "steps" (the student's answer count,
              for datasets without a clock such as ASSISTments 2009).
 """

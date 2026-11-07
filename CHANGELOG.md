@@ -7,7 +7,7 @@
 - ASSISTments 2009 (corrected, collapsed) download and pyKT-style cleaning to Parquet.
 - Student-level 80/20 test split with 5 validation folds, saved next to the data.
 - One evaluator for every model: AUC, accuracy, Brier, ECE, log loss, cold-start buckets.
-- Baselines: skill average, BKT (EM, implemented here), PFA, a Bayesian Beta baseline.
+- Baselines: skill average, BKT (EM, implemented here), PFA, a Bayesian Beta-posterior model.
 - DKT and SAKT in PyTorch with a per-token question-start index that stops a
   multi-skill question from seeing its own answer.
 - Tests for student leakage, causality, determinism and padding.

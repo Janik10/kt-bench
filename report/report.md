@@ -137,8 +137,22 @@ mean).
   standard deviations (≤ 0.0006 AUC) that understate the real uncertainty. The
   headline ASSISTments table therefore averages over five different draws of
   the test students (split seeds 0–4) with each model's default settings.
-- **Tuning.** Random search over each model's grid, scored on validation fold
-  0 only. Test students are never loaded during tuning.
+- **Tuning.** Random search, scored on validation fold 0 only; test students
+  are never loaded during tuning. Every tuned model samples 12 configurations
+  (or its whole grid when that has exactly 12 points) from the grid in Table 0.
+  Neural models early-stop on validation AUC (patience 10 and at most 100
+  epochs on ASSISTments; patience 3 and at most 30 epochs on EdNet).
+
+**Table 0. Search grids** (identical on both datasets unless noted).
+
+| Model | Searched | Points | Fixed |
+|---|---|---|---|
+| Skill average | none | – | smoothing 1 |
+| BKT | forget on/off × max guess {0.3, 0.5} × max slip {0.1, 0.3, 0.5} | 12 | restarts 5 (ASSISTments); 2 restarts, ≤ 30 EM iterations (EdNet) |
+| PFA | C ∈ {0.001, 0.01, 0.1, 1, 10, 100} × counts {raw, log1p} | 12 | L2 logistic regression |
+| Beta posterior (tuned) | prior {Beta(1, 1), skill-centred} × strength {1, 2, 4, 8} × half-life {none, 3, 5, 10, 20, 50 answers} (ASSISTments) or {none, 1, 3, 10, 23.1, 60 days} (EdNet) | 48 | unit evidence weight |
+| DKT | hidden {100, 200} × dropout {0.1, 0.2, 0.3} × learning rate {1e-3, 5e-4} | 12 | embedding 200, 1 LSTM layer, batch 64 (EdNet 128), windows of 200 |
+| SAKT | embedding {64, 128, 256} × blocks {1, 2} × dropout {0.1, 0.2, 0.3} × learning rate {1e-3, 5e-4} | 36 | 8 heads, batch 64 (EdNet 128), windows of 200 |
 - **Guards, run in CI.** No test student appears in train or validation;
   changing a student's current or future answers never changes an earlier
   prediction (including the multi-skill case); the same seed gives the same
@@ -193,11 +207,7 @@ SAKT.]
 | DKT | 0.6774 ± 0.0001 [CHECK] | 0.0064 | 0.6431 | 339 |
 | SAKT | 0.6687 ± 0.0004 | 0.0113 | 0.6472 | 815 |
 
-![Calibration on ASSISTments 2009](figures/calibration_assist2009.png)
-
-![AUC by number of prior answers](figures/cold_start.png)
-
-![Training time vs. AUC](figures/cost_vs_auc.png)
+Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and training time vs. AUC.
 
 **Observations.**
 
@@ -233,10 +243,10 @@ SAKT.]
 
 - **Default vs. tuned settings.** Table 1 uses each model's config defaults on
   every draw, while Table 2 uses settings tuned on validation fold 0 of the
-  seed-42 split. On EdNet, BKT and SAKT were not tuned with the full 12-trial
-  budget because it exceeds four hours [CHECK: final status after the
-  overnight run]. On ASSISTments, BKT received 4 trials and PFA 8, because
-  their search grids had only that many points; the other models received 12.
+  seed-42 split. Every tuned model received 12 trials on both datasets except
+  BKT on EdNet, which uses its defaults: one EdNet BKT fit takes about 38
+  minutes, so 12 trials would take about 7.6 hours [CHECK: confirm all other
+  12-trial runs completed].
 - **SAKT is 0.011 AUC above pyKT.** Possible causes: our all-in-one attention
   mask is also used in training; test-time windows overlap by half (each
   scored answer has at least 100 tokens of context) instead of being cut
@@ -293,3 +303,21 @@ SAKT.]
 [13] M. Feng, N. Heffernan and K. Koedinger. Addressing the assessment challenge with an online system that tutors as it assesses. *User Modeling and User-Adapted Interaction*, 19(3):243–266, 2009.
 
 [14] Y. Choi, Y. Lee, D. Shin, J. Cho, S. Park, S. Lee, J. Baek, C. Bae, B. Kim and J. Heo. EdNet: A large-scale hierarchical dataset in education. *AIED*, 2020.
+
+## Appendix: Figures
+
+![Calibration on ASSISTments 2009](figures/calibration_assist2009.png)
+
+**Figure A1.** Calibration on held-out students, ASSISTments 2009 (seed-42 test set, all five training runs pooled).
+
+![Calibration on EdNet](figures/calibration_ednet.png)
+
+**Figure A2.** Calibration on held-out students, EdNet KT1 sample.
+
+![AUC by number of prior answers](figures/cold_start.png)
+
+**Figure A3.** AUC by how many answers the student had already given.
+
+![Training time vs. AUC](figures/cost_vs_auc.png)
+
+**Figure A4.** Training time per run vs. test AUC (log time axis).

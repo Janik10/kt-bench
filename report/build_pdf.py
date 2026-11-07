@@ -23,11 +23,13 @@ h1 { font-size: 17pt; text-align: center; margin: 0 0 4pt; line-height: 1.2; }
 .byline { text-align: center; color: #444; margin-bottom: 14pt; }
 h2 { font-size: 12.5pt; margin: 14pt 0 4pt; }
 p, li { text-align: justify; }
-table { border-collapse: collapse; margin: 6pt auto 10pt; font-size: 8.8pt; }
-th, td { border-top: 1px solid #bbb; border-bottom: 1px solid #bbb; padding: 2.5pt 6pt; text-align: left; }
+table { border-collapse: collapse; margin: 5pt auto 8pt; font-size: 8.2pt; }
+th, td { border-top: 1px solid #bbb; border-bottom: 1px solid #bbb; padding: 2pt 5pt; text-align: left; }
 th { background: #f2f1ec; }
-img { display: block; max-width: 70%; margin: 4pt auto; }
-img[src*="calibration"] { max-width: 40%; }
+img { display: block; max-width: 100%; margin: 4pt auto 12pt; }
+img[src*="calibration"] { max-width: 62%; }
+.appendix { break-before: page; }
+img, table { break-inside: avoid; }
 .refs p { font-size: 8.6pt; line-height: 1.25; margin: 2pt 0; text-align: left; }
 code { font-size: 9pt; }
 """
@@ -57,7 +59,8 @@ def browser() -> str:
 def main() -> None:
     meta, body = front_matter((HERE / "report.md").read_text(encoding="utf-8"))
     html_body = markdown.markdown(body, extensions=["tables"])
-    html_body = html_body.replace("<h2>References</h2>", "<h2>References</h2><div class='refs'>") + "</div>"
+    html_body = html_body.replace("<h2>References</h2>", "<h2>References</h2><div class='refs'>")
+    html_body = html_body.replace("<h2>Appendix: Figures</h2>", "</div><h2 class='appendix'>Appendix: Figures</h2>")
     byline = f"{meta.get('author', '')} · {meta.get('date', '')}"
     head = f"<h1>{meta.get('title', '')}</h1><div class='byline'>{byline}</div>"
     html = (f"<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style></head>"

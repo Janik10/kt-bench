@@ -16,14 +16,13 @@ from pathlib import Path
 
 import numpy as np
 
-from ktbench.report import LABELS, ORDER
+from ktbench.report import LABELS, ORDER, SPLIT_SEEDS
 
 
 def collect(base: Path, dataset: str) -> dict[str, dict[int, dict]]:
     out: dict[str, dict[int, dict]] = {}
-    for seed_dir in sorted(base.glob("seed*")):
-        seed = int(seed_dir.name[4:])
-        for f in sorted((seed_dir / dataset).glob("*/run0.json")):
+    for seed in SPLIT_SEEDS:  # seed 42 is the benchmark split, compared separately in the report
+        for f in sorted((base / f"seed{seed}" / dataset).glob("*/run0.json")):
             out.setdefault(f.parent.name, {})[seed] = json.loads(f.read_text())
     return out
 

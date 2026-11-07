@@ -28,7 +28,11 @@ for ds in $DATASETS; do
     fi
     $PY -m ktbench.train "$cfg" --results-dir "$results" --preds-dir "$preds"
   done
-  $PY -m ktbench.analysis.calibration "$ds" --preds-dir "$preds" \
-    --out "$( [ "$ds" = synthetic ] && echo runs/ci || echo report/figures )/calibration_$ds.png"
+  if [ "$ds" = synthetic ]; then
+    $PY -m ktbench.analysis.calibration "$ds" --preds-dir "$preds" --out runs/ci/calibration_$ds.png
+  fi
   $PY -m ktbench.report --results-dir "$results"
 done
+if [ "$DATASETS" != synthetic ]; then
+  $PY -m ktbench.analysis.figures   # report/figures/*.png
+fi

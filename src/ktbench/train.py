@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import pickle
 import platform
 import time
 from pathlib import Path
@@ -68,7 +69,25 @@ def run_one(cfg: dict, run: int, df: pd.DataFrame, meta, folds: pd.DataFrame, re
     pd.DataFrame(
         {"user_id": split.test["user_id"], "t": split.test["t"], "correct": split.test["correct"], "p": p}
     ).to_parquet(pdir / f"run{run}.parquet", index=False)
+    if run == 0:
+        save_model(model, pdir / "model_run0.pkl")
     return result
+
+
+def save_model(model, path: Path) -> None:
+    """Pickle a fitted model (moved to CPU so it loads anywhere) for the demo."""
+    if hasattr(model, "net"):
+        import torch
+
+        model.net.cpu()
+        model.device = torch.device("cpu")
+    with open(path, "wb") as f:
+        pickle.dump(model, f)
+
+
+def load_model(path: Path):
+    with open(path, "rb") as f:
+        return pickle.load(f)
 
 
 def main(argv: list[str] | None = None) -> None:

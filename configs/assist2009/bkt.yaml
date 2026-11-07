@@ -4,6 +4,7 @@ runs: 5
 params:
   num_fits: 5
   forgets: false
-search:
-  num_fits: [1, 5]
+search:  # 12 points; restarts fixed at num_fits above
   forgets: [false, true]
+  max_guess: [0.3, 0.5]
+  max_slip: [0.1, 0.3, 0.5]

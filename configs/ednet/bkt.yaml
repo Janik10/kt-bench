@@ -5,5 +5,7 @@ params:
   num_fits: 2
   max_iter: 30
   forgets: false
-search:
+search:  # 12 points; restarts and EM iterations fixed above
   forgets: [false, true]
+  max_guess: [0.3, 0.5]
+  max_slip: [0.1, 0.3, 0.5]

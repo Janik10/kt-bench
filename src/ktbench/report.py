@@ -28,6 +28,9 @@ LABELS = {
     "dkt": "DKT",
     "sakt": "SAKT",
 }
+# The split study runs config defaults, so its "beta" row is a hand-set variant, not a tuned one.
+HEADLINE_LABELS = {**LABELS, "beta_default": "Beta posterior (Beta(1, 1) prior)",
+                   "beta": "Beta posterior (skill-centred prior)"}
 DATASETS = {"assist2009": "ASSISTments 2009", "ednet": "EdNet KT1 (sample)"}
 # pyKT (Liu et al., 2022), question-level, all-in-one, late-fusion mean, ASSISTments 2009.
 PYKT = {"assist2009": {"dkt": 0.7541, "sakt": 0.7246}}
@@ -80,7 +83,7 @@ def headline_table(dataset: str, by_cfg: dict[str, list[dict]]) -> str:
         runs = by_cfg[n]
         auc = float(np.mean([r["auc"] for r in runs]))
         lines.append(
-            f"| {LABELS.get(n, n)} | {_ms([r['auc'] for r in runs])} | {_pykt(dataset, n, auc)} "
+            f"| {HEADLINE_LABELS.get(n, n)} | {_ms([r['auc'] for r in runs])} | {_pykt(dataset, n, auc)} "
             f"| {_ms([r['acc'] for r in runs])} | {_ms([r['brier'] for r in runs])} | {_ms([r['ece'] for r in runs])} "
             f"| {_ms([r['cold_start']['1-5']['auc'] for r in runs])} | {len(runs)} |"
         )

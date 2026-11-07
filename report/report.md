@@ -154,14 +154,14 @@ settings; mean ± std over draws).
 | Skill average | 0.6224 ± 0.0042 | – | 0.2145 | 0.0113 | 0.6335 |
 | BKT | 0.7217 ± 0.0040 | – | 0.1912 | 0.0118 | 0.7367 |
 | PFA | 0.7087 ± 0.0039 | – | 0.1967 | 0.0215 | 0.7098 |
-| Beta posterior (default) | 0.7024 ± 0.0052 | – | 0.2086 | 0.1049 | 0.7118 |
-| Beta posterior (tuned) | 0.7103 ± 0.0045 | – | 0.1965 | 0.0483 | 0.7249 |
+| Beta posterior (Beta(1, 1) prior) | 0.7024 ± 0.0052 | – | 0.2086 | 0.1049 | 0.7118 |
+| Beta posterior (skill-centred prior) | 0.7103 ± 0.0045 | – | 0.1965 | 0.0483 | 0.7249 |
 | DKT | **0.7575 ± 0.0045** | 0.7541 (+0.0034) | **0.1802** | **0.0073** | **0.7639** |
 | SAKT | 0.7359 ± 0.0042 | 0.7246 (+0.0113) | 0.1878 | 0.0230 | 0.7520 |
 
-*In Table 1, "tuned" for the Beta posterior means its config defaults (a
-skill-centred prior with a 10-answer half-life), not a per-draw search.
-[CHECK: rename the row or rerun with the tuned params before release.]*
+*Table 1 uses every model's config defaults on every draw; the
+skill-centred Beta row is a hand-set variant (prior strength 2, 10-answer
+half-life), not a tuned one.*
 
 **Table 2. ASSISTments 2009, fixed seed-42 test set, tuned settings** (mean ±
 std over 5 training seeds). With the same default settings, the seed-42 test set

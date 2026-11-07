@@ -25,6 +25,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest==9.2.0", "ruff==0.17.3"]
+report = ["markdown==3.11.3"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ktbench"]

@@ -227,3 +227,4 @@ wandb/
 runs/
 results/runs/
 *.log
+report/report.html

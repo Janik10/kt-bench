@@ -24,6 +24,7 @@ import pandas as pd
 from ktbench.models.base import KTModel, explode_skills, fuse
 
 EPS = 1e-6
+TINY = np.finfo(np.float64).tiny
 MAX_CELLS = 2_000_000  # padded (sequences x steps) per chunk; bounds memory on EdNet
 
 
@@ -70,9 +71,13 @@ def forward(obs: np.ndarray, mask: np.ndarray, prior, learn, guess, slip, forget
         pc = known * (1 - slip) + (1 - known) * guess
         p_correct[:, t] = pc
         o, m = obs[:, t], mask[:, t]
-        like = np.where(o == 1, pc, 1 - pc)
-        loglik += np.log(np.clip(like[m], EPS, None)).sum()
-        post = np.where(o == 1, known * (1 - slip), known * slip) / np.clip(like, EPS, None)
+        # Likelihood of the observed answer from each state, with no 1 - P(correct): when guess
+        # and slip are ~1e-5 that subtraction loses ~12 digits and pushed P(known) above 1.
+        from_known = known * np.where(o == 1, 1 - slip, slip)
+        from_unknown = (1 - known) * np.where(o == 1, guess, 1 - guess)
+        like = from_known + from_unknown
+        loglik += np.log(np.maximum(like[m], TINY)).sum()
+        post = from_known / np.maximum(like, TINY)  # a / (a + b), so never above 1
         nxt = post * (1 - forget) + (1 - post) * learn
         known = np.where(m, nxt, known)
     return p_known, p_correct, loglik

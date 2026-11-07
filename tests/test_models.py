@@ -62,3 +62,24 @@ def test_bkt_chunking_does_not_change_the_fit(dataset, split, monkeypatch):
     for skill, params in one.skill_params.items():
         np.testing.assert_allclose(many.skill_params[skill], params, rtol=1e-6)
     np.testing.assert_allclose(many.predict(split.test), one.predict(split.test), rtol=1e-6)
+
+
+def test_bkt_forward_stays_a_probability_with_tiny_guess_and_slip():
+    """Regression for the EdNet BKT crash. With guess and slip ~1e-5 (fit on some EdNet skills),
+    computing P(wrong) as 1 - P(correct) loses ~12 digits, the posterior P(known) after a wrong
+    answer rounds above 1 (by 2e-13 at step 4 here), and the error compounds until P(correct) > 1."""
+    from ktbench.models import bkt
+
+    answers = (  # the shortest failing prefix found by a random search
+        "1110101111111111111111111111111010111111111111110111111111111111"
+        "0111110111111111111111001011111111111101111111111111110110001"
+    )
+    obs = np.array([[int(c) for c in answers]], dtype=float)
+    mask = np.ones_like(obs, dtype=bool)
+    p_known, p_correct, loglik = bkt.forward(
+        obs, mask, prior=0.8326691199192928, learn=0.6055340626775021,
+        guess=9.370144637718133e-06, slip=1.793683401796543e-05,
+    )
+    assert np.all((p_known >= 0) & (p_known <= 1))
+    assert np.all((p_correct >= 0) & (p_correct <= 1))
+    assert np.isfinite(loglik)

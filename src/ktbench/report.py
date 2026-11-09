@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -149,6 +150,8 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--readme", type=Path, nargs="?", const=Path("README.md"), default=None)
     args = ap.parse_args(argv)
     text = render(args.results_dir)
+    # The tables use ± and −, which a cp1252 Windows console cannot print.
+    sys.stdout.reconfigure(encoding="utf-8")
     print(text)
     if args.readme:
         readme = args.readme.read_text(encoding="utf-8")

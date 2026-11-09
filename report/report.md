@@ -19,8 +19,9 @@ question. Tests enforce this, along with causality, determinism and padding.
 On ASSISTments 2009, averaged over five draws of the held-out students, DKT
 reaches 0.7575 ± 0.0045 AUC (pyKT reports 0.7541) and SAKT 0.7359 ± 0.0042
 (pyKT: 0.7246). The best classic model, BKT, reaches 0.7217 ± 0.0040. DKT's
-lead holds for students with only 1–5 prior answers. On EdNet the ordering is
-the same and the gaps are larger [CHECK: fill with tuned EdNet numbers]. An
+lead holds for students with only 1–5 prior answers. On EdNet, tuned on the same
+12-trial budget, DKT again leads (0.6776 ± 0.0002), ahead of SAKT (0.6674 ± 0.0009), PFA
+(0.6517 ± 0.0002) and BKT (0.6495 ± 0.0001). An
 untuned Beta-posterior baseline is competitive on ranking (0.7024 AUC) but
 poorly calibrated (ECE 0.105); a tuned prior halves the calibration error.
 
@@ -152,6 +153,7 @@ mean).
 | Beta posterior (tuned) | prior {Beta(1, 1), skill-centred} × strength {1, 2, 4, 8} × half-life {none, 3, 5, 10, 20, 50 answers} (ASSISTments) or {none, 1, 3, 10, 23.1, 60 days} (EdNet) | 48 | unit evidence weight |
 | DKT | hidden {100, 200} × dropout {0.1, 0.2, 0.3} × learning rate {1e-3, 5e-4} | 12 | embedding 200, 1 LSTM layer, batch 64 (EdNet 128), windows of 200 |
 | SAKT | embedding {64, 128, 256} × blocks {1, 2} × dropout {0.1, 0.2, 0.3} × learning rate {1e-3, 5e-4} | 36 | 8 heads, batch 64 (EdNet 128), windows of 200 |
+
 - **Guards, run in CI.** No test student appears in train or validation;
   changing a student's current or future answers never changes an earlier
   prediction (including the multi-skill case); the same seed gives the same
@@ -181,30 +183,29 @@ std over 5 training seeds). With the same default settings, the seed-42 test set
 is 0.0059 AUC easier than an average of the five draws (mean over all seven
 models), so these numbers sit slightly above Table 1.
 
-| Model | AUC | Accuracy | ECE | Train (s) | Inference (µs/answer) |
+| Model | AUC | Accuracy | ECE | Train (s, median) | Inference (µs/answer) |
 |---|---|---|---|---|---|
 | Skill average | 0.6214 ± 0.0004 | 0.6592 | 0.0080 | 0.3 | 1.6 |
-| BKT | 0.7346 ± 0.0005 | 0.7198 | 0.0115 | 28 [CHECK] | 11.5 |
-| PFA | 0.7323 ± 0.0005 | 0.7161 | 0.0101 | 1.5 | 1.7 |
+| BKT | 0.7344 ± 0.0006 | 0.7200 | 0.0124 | 137 | 10.7 |
+| PFA | 0.7323 ± 0.0005 | 0.7161 | 0.0101 | 2.0 | 2.3 |
 | Beta posterior (default) | 0.7108 ± 0.0000 | 0.6927 | 0.1010 | < 0.1 | 2.1 |
 | Beta posterior (tuned) | 0.7152 ± 0.0002 | 0.7048 | 0.0330 | 0.2 | 2.1 |
-| DKT | 0.7638 ± 0.0006 | 0.7340 | 0.0087 | 43 | 5.5 |
-| SAKT | 0.7477 ± 0.0005 | 0.7227 | 0.0180 | 196 | 6.4 |
+| DKT | 0.7638 ± 0.0006 | 0.7340 | 0.0087 | 45 | 5.5 |
+| SAKT | 0.7477 ± 0.0005 | 0.7227 | 0.0180 | 201 | 6.4 |
 
 **Table 3. EdNet KT1, 50,000-student sample, fixed test set** (9,390 test
-students; 1,220,901 scored answers). [CHECK: replace with the tuned numbers
-from the overnight run; current values use default settings for BKT, DKT and
-SAKT.]
+students; 1,220,901 scored answers), tuned settings, mean ± std over 5
+training seeds.
 
-| Model | AUC | ECE | AUC, 1–5 prior answers | Train (s) |
+| Model | AUC | ECE | AUC, 1–5 prior answers | Train (s, median) |
 |---|---|---|---|---|
-| Skill average | 0.5905 ± 0.0002 | 0.0110 | 0.5864 | 11 |
-| BKT | [CHECK] | [CHECK] | [CHECK] | [CHECK] |
-| PFA | 0.6517 ± 0.0002 [CHECK] | 0.0040 | 0.6056 | 85 |
+| Skill average | 0.5905 ± 0.0002 | 0.0110 | 0.5864 | 10 |
+| BKT | 0.6495 ± 0.0001 | 0.0157 | 0.6104 | 3,639 |
+| PFA | 0.6517 ± 0.0002 | 0.0039 | 0.6054 | 91 |
 | Beta posterior (default) | 0.6332 ± 0.0000 | 0.0462 | 0.5402 | < 0.1 |
-| Beta posterior (tuned) | 0.6412 ± 0.0002 | 0.0192 | 0.5902 | 9 |
-| DKT | 0.6774 ± 0.0001 [CHECK] | 0.0064 | 0.6431 | 339 |
-| SAKT | 0.6687 ± 0.0004 | 0.0113 | 0.6472 | 815 |
+| Beta posterior (tuned) | 0.6412 ± 0.0002 | 0.0192 | 0.5902 | 10 |
+| DKT | 0.6776 ± 0.0002 | 0.0099 | 0.6435 | 419 |
+| SAKT | 0.6674 ± 0.0009 | 0.0260 | 0.6439 | 672 |
 
 Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and training time vs. AUC.
 
@@ -214,18 +215,19 @@ Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and
    SAKT is 0.0113 above it, just outside the 0.01 target.
 2. *Neural vs. classic.* DKT beats the best classic model by about 0.036 AUC
    on ASSISTments (0.7575 vs. 0.7217 for BKT, five draws) and by about 0.026
-   on EdNet (0.6774 vs. 0.6517 for PFA) [CHECK: EdNet after tuning].
+   on EdNet (0.6776 vs. 0.6517 for PFA).
 3. *Cold start.* For answers with only 1–5 prior answers, DKT still leads on
    ASSISTments (0.7639 vs. 0.7367 for BKT). On EdNet both neural models are far
-   ahead of the counting models (DKT 0.6431, SAKT 0.6472, Beta default
-   0.5402).
-4. *Calibration.* All models except the default Beta posterior have ECE
-   ≤ 0.023. The default Beta(1, 1) prior is badly calibrated on ASSISTments
+   ahead of the counting models (DKT 0.6435, SAKT 0.6439, BKT 0.6104, Beta
+   default 0.5402).
+4. *Calibration.* Every model other than the two Beta variants has ECE
+   ≤ 0.026. The default Beta(1, 1) prior is badly calibrated on ASSISTments
    (ECE 0.10): it starts every skill at 0.5 while the base rate is about 0.66.
    A skill-centred prior cuts ECE to 0.033–0.048.
-5. *Cost.* The Beta posterior trains in under a second and PFA in 1.5 s; DKT
-   costs about 43 s per run on ASSISTments and SAKT about 196 s on a laptop
-   GPU, for the largest accuracy gains. Inference is a few microseconds per
+5. *Cost.* The Beta posterior trains in under a second and PFA in 2 s; DKT
+   costs about 45 s per run on ASSISTments and SAKT about 201 s on a laptop
+   GPU, for the largest accuracy gains. BKT, fit on CPU, is the slowest model
+   on EdNet (about an hour per run, vs. 7 minutes for DKT). Inference is a few microseconds per
    answer for all models.
 
 ## 7. Discussion
@@ -242,10 +244,10 @@ Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and
 
 - **Default vs. tuned settings.** Table 1 uses each model's config defaults on
   every draw, while Table 2 uses settings tuned on validation fold 0 of the
-  seed-42 split. Every tuned model received 12 trials on both datasets except
-  BKT on EdNet, which uses its defaults: one EdNet BKT fit takes about 38
-  minutes, so 12 trials would take about 7.6 hours [CHECK: confirm all other
-  12-trial runs completed].
+  seed-42 split. Every tuned model received 12 trials on both datasets (the
+  grids are in Table 0). Tuning does not always carry over to the test
+  students: on EdNet, tuned SAKT (0.6674 ± 0.0009) is 0.0013 AUC below its
+  defaults (0.6687 ± 0.0004), while tuning lifted BKT from 0.6423 to 0.6495.
 - **SAKT is 0.011 AUC above pyKT.** Possible causes: our all-in-one attention
   mask is also used in training; test-time windows overlap by half (each
   scored answer has at least 100 tokens of context) instead of being cut
@@ -258,9 +260,11 @@ Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and
   only. Models trained on it must not ship in a commercial product.
 - **No real course data.** No data from a live course or deployment was
   evaluated; all results are on public benchmarks.
-- **Timing.** Training times come from single runs on one laptop (RTX 4060
-  laptop GPU, 12 CPU threads). Some ASSISTments runs overlapped with other jobs,
-  so times are indicative only [CHECK].
+- **Timing.** Training times are medians of 5 runs on one laptop (RTX 4060
+  laptop GPU, 12 CPU threads). Some runs overlapped with other jobs (EdNet BKT
+  ran on CPU alongside the GPU queue), and the laptop slept during one EdNet
+  BKT run (586 minutes vs. 47–67 for the other four) and one DKT tuning trial,
+  so times are indicative only; the median is used to limit their effect.
 - **Scope.** No AKT or other newer attention models; no item (question-ID)
   embeddings in any model.
 
@@ -269,7 +273,7 @@ Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and
 - Add AKT and simpleKT, the strongest models in the pyKT benchmark.
 - Isolate the SAKT gap: rerun with pyKT's non-overlapping test windows and its training mask.
 - Full EdNet (784k students) on a larger GPU.
-- Equal tuning budgets for every model on both datasets, and per-draw tuning for the five-draw table.
+- Per-draw tuning for the five-draw table.
 - Item-level features (question IDs) for PFA and the neural models.
 - Evaluate on small real-world course data with a within-student temporal split and bootstrap intervals.
 
@@ -319,4 +323,4 @@ Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and
 
 ![Training time vs. AUC](figures/cost_vs_auc.png)
 
-**Figure A4.** Training time per run vs. test AUC (log time axis).
+**Figure A4.** Training time per run (median of 5 runs, log axis) vs. mean test AUC, fixed test sets.

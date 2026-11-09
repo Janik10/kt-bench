@@ -123,7 +123,7 @@ def cost_vs_auc(results_dir: Path, out: Path) -> Path:
     for ax, ds in zip(axes[0], datasets, strict=True):
         for n in _order(data[ds]):
             runs = data[ds][n]
-            secs = max(np.mean([r["train_secs"] for r in runs]), 0.01)  # log axis needs > 0
+            secs = max(np.median([r["train_secs"] for r in runs]), 0.01)  # median vs. outliers; log axis needs > 0
             auc = np.mean([r["auc"] for r in runs])
             ax.scatter(secs, auc, s=60, color=COLORS.get(n), marker=MARKERS.get(n), edgecolor=SURFACE,
                        linewidth=1.5, zorder=3)
@@ -131,9 +131,9 @@ def cost_vs_auc(results_dir: Path, out: Path) -> Path:
                         fontsize=7.5, color=INK2)
         ax.set_xscale("log")
         ax.set_xlabel("Training time per run (s, log scale; under 0.01 s drawn at 0.01)")
-        ax.set_title(f"{DATASETS[ds]}: fixed test set, mean of 5 runs", loc="left")
+        ax.set_title(f"{DATASETS[ds]}: fixed test set", loc="left")
     axes[0][0].set_ylabel("Test AUC")
-    fig.suptitle("What each point of AUC costs to train", x=0.01, ha="left")
+    fig.suptitle("What each point of AUC costs to train (median time, mean AUC over 5 runs)", x=0.01, ha="left")
     fig.tight_layout()
     fig.savefig(out, dpi=160)
     plt.close(fig)

@@ -95,7 +95,7 @@ def fixed_table(dataset: str, configs: dict[str, list[dict]], title: str) -> str
         title,
         "",
         "| Model | AUC | pyKT published AUC (ours − pyKT) | Accuracy | Brier | ECE | AUC, 1–5 prior answers "
-        "| Train (s) | Inference (µs/answer) | Runs |",
+        "| Train (s, median) | Inference (µs/answer) | Runs |",
         "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for n in _order(configs):
@@ -106,7 +106,7 @@ def fixed_table(dataset: str, configs: dict[str, list[dict]], title: str) -> str
             f"| {_ms([r['acc'] for r in runs])} "
             f"| {_ms([r['brier'] for r in runs])} | {_ms([r['ece'] for r in runs])} "
             f"| {_ms([r['cold_start']['1-5']['auc'] for r in runs])} "
-            f"| {np.mean([r['train_secs'] for r in runs]):.1f} "
+            f"| {np.median([r['train_secs'] for r in runs]):.1f} "
             f"| {np.mean([r['infer_us_per_answer'] for r in runs]):.1f} | {len(runs)} |"
         )
     return "\n".join(lines)

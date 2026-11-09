@@ -121,6 +121,8 @@ bash scripts/reproduce_all.sh                # one command: downloads ASSISTment
 python -m ktbench.report --readme            # writes the tables above
 ```
 
+On Windows, clone to a short path (e.g. `C:\kt`) to avoid the 260-character path limit when installing torch.
+
 EdNet (about 1.2 GB download, then several GPU hours):
 
 ```bash

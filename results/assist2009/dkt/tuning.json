@@ -1,0 +1,120 @@
+{
+  "valid_fold": 0,
+  "budget": 12,
+  "best_params": {
+    "dropout": 0.3,
+    "hidden_size": 100,
+    "lr": 0.0005
+  },
+  "best_valid_auc": 0.7483902131429616,
+  "trials": [
+    {
+      "params": {
+        "dropout": 0.3,
+        "hidden_size": 100,
+        "lr": 0.0005
+      },
+      "valid_auc": 0.7483902131429616,
+      "secs": 45.011082499986514
+    },
+    {
+      "params": {
+        "dropout": 0.1,
+        "hidden_size": 100,
+        "lr": 0.0005
+      },
+      "valid_auc": 0.7469866732388701,
+      "secs": 44.15923020010814
+    },
+    {
+      "params": {
+        "dropout": 0.1,
+        "hidden_size": 100,
+        "lr": 0.001
+      },
+      "valid_auc": 0.7469247888933809,
+      "secs": 32.567470900015905
+    },
+    {
+      "params": {
+        "dropout": 0.2,
+        "hidden_size": 200,
+        "lr": 0.0005
+      },
+      "valid_auc": 0.7473546215322445,
+      "secs": 60.85800600005314
+    },
+    {
+      "params": {
+        "dropout": 0.1,
+        "hidden_size": 200,
+        "lr": 0.001
+      },
+      "valid_auc": 0.7476228384934048,
+      "secs": 42.649086200166494
+    },
+    {
+      "params": {
+        "dropout": 0.1,
+        "hidden_size": 200,
+        "lr": 0.0005
+      },
+      "valid_auc": 0.7473351491998022,
+      "secs": 53.08138859993778
+    },
+    {
+      "params": {
+        "dropout": 0.2,
+        "hidden_size": 100,
+        "lr": 0.001
+      },
+      "valid_auc": 0.7479419560459065,
+      "secs": 25.208750299876556
+    },
+    {
+      "params": {
+        "dropout": 0.3,
+        "hidden_size": 200,
+        "lr": 0.0005
+      },
+      "valid_auc": 0.7481279158744557,
+      "secs": 57.323158300016075
+    },
+    {
+      "params": {
+        "dropout": 0.3,
+        "hidden_size": 100,
+        "lr": 0.001
+      },
+      "valid_auc": 0.7469902372066168,
+      "secs": 30.776683300035074
+    },
+    {
+      "params": {
+        "dropout": 0.2,
+        "hidden_size": 200,
+        "lr": 0.001
+      },
+      "valid_auc": 0.7483000411730909,
+      "secs": 54.725854099961
+    },
+    {
+      "params": {
+        "dropout": 0.2,
+        "hidden_size": 100,
+        "lr": 0.0005
+      },
+      "valid_auc": 0.7481581827061909,
+      "secs": 44.156769699882716
+    },
+    {
+      "params": {
+        "dropout": 0.3,
+        "hidden_size": 200,
+        "lr": 0.001
+      },
+      "valid_auc": 0.748040313786303,
+      "secs": 55.96486830012873
+    }
+  ]
+}

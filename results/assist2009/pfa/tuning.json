@@ -1,0 +1,107 @@
+{
+  "valid_fold": 0,
+  "budget": 12,
+  "best_params": {
+    "C": 1.0,
+    "count_transform": "log1p"
+  },
+  "best_valid_auc": 0.7132712275795849,
+  "trials": [
+    {
+      "params": {
+        "C": 10.0,
+        "count_transform": "log1p"
+      },
+      "valid_auc": 0.7132114569120045,
+      "secs": 2.850430500227958
+    },
+    {
+      "params": {
+        "C": 0.001,
+        "count_transform": "log1p"
+      },
+      "valid_auc": 0.6865297695456777,
+      "secs": 0.7316920999437571
+    },
+    {
+      "params": {
+        "C": 0.001,
+        "count_transform": "raw"
+      },
+      "valid_auc": 0.6974934965457642,
+      "secs": 1.8849228001199663
+    },
+    {
+      "params": {
+        "C": 1.0,
+        "count_transform": "log1p"
+      },
+      "valid_auc": 0.7132712275795849,
+      "secs": 2.077251800103113
+    },
+    {
+      "params": {
+        "C": 0.01,
+        "count_transform": "raw"
+      },
+      "valid_auc": 0.6978480983875351,
+      "secs": 3.720073099946603
+    },
+    {
+      "params": {
+        "C": 0.01,
+        "count_transform": "log1p"
+      },
+      "valid_auc": 0.7084873529187963,
+      "secs": 1.0550929999444634
+    },
+    {
+      "params": {
+        "C": 0.1,
+        "count_transform": "raw"
+      },
+      "valid_auc": 0.698833548418488,
+      "secs": 7.649593099951744
+    },
+    {
+      "params": {
+        "C": 100.0,
+        "count_transform": "log1p"
+      },
+      "valid_auc": 0.7131000057238637,
+      "secs": 2.128143699839711
+    },
+    {
+      "params": {
+        "C": 10.0,
+        "count_transform": "raw"
+      },
+      "valid_auc": 0.698387636089481,
+      "secs": 12.802359800087288
+    },
+    {
+      "params": {
+        "C": 1.0,
+        "count_transform": "raw"
+      },
+      "valid_auc": 0.6985721237144724,
+      "secs": 11.768299699993804
+    },
+    {
+      "params": {
+        "C": 0.1,
+        "count_transform": "log1p"
+      },
+      "valid_auc": 0.7127704014602283,
+      "secs": 1.384247199865058
+    },
+    {
+      "params": {
+        "C": 100.0,
+        "count_transform": "raw"
+      },
+      "valid_auc": 0.6984676729638172,
+      "secs": 12.733145500067621
+    }
+  ]
+}

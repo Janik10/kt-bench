@@ -1,0 +1,120 @@
+{
+  "valid_fold": 0,
+  "budget": 12,
+  "best_params": {
+    "forgets": true,
+    "max_guess": 0.3,
+    "max_slip": 0.5
+  },
+  "best_valid_auc": 0.714334476297192,
+  "trials": [
+    {
+      "params": {
+        "forgets": true,
+        "max_guess": 0.5,
+        "max_slip": 0.1
+      },
+      "valid_auc": 0.7093836200855167,
+      "secs": 86.73684119991958
+    },
+    {
+      "params": {
+        "forgets": false,
+        "max_guess": 0.3,
+        "max_slip": 0.3
+      },
+      "valid_auc": 0.7060654515644352,
+      "secs": 78.46507150004618
+    },
+    {
+      "params": {
+        "forgets": false,
+        "max_guess": 0.3,
+        "max_slip": 0.1
+      },
+      "valid_auc": 0.7001971904108716,
+      "secs": 42.05317170009948
+    },
+    {
+      "params": {
+        "forgets": true,
+        "max_guess": 0.3,
+        "max_slip": 0.3
+      },
+      "valid_auc": 0.7139416888021137,
+      "secs": 118.99402200011536
+    },
+    {
+      "params": {
+        "forgets": false,
+        "max_guess": 0.3,
+        "max_slip": 0.5
+      },
+      "valid_auc": 0.7065376643418441,
+      "secs": 82.19011799991131
+    },
+    {
+      "params": {
+        "forgets": false,
+        "max_guess": 0.5,
+        "max_slip": 0.1
+      },
+      "valid_auc": 0.7046661161063635,
+      "secs": 53.49768909998238
+    },
+    {
+      "params": {
+        "forgets": false,
+        "max_guess": 0.5,
+        "max_slip": 0.3
+      },
+      "valid_auc": 0.7080295304829289,
+      "secs": 85.937993099913
+    },
+    {
+      "params": {
+        "forgets": true,
+        "max_guess": 0.5,
+        "max_slip": 0.5
+      },
+      "valid_auc": 0.7140564101149365,
+      "secs": 128.98651860002428
+    },
+    {
+      "params": {
+        "forgets": true,
+        "max_guess": 0.3,
+        "max_slip": 0.5
+      },
+      "valid_auc": 0.714334476297192,
+      "secs": 124.60293659986928
+    },
+    {
+      "params": {
+        "forgets": true,
+        "max_guess": 0.3,
+        "max_slip": 0.1
+      },
+      "valid_auc": 0.7090571265740535,
+      "secs": 76.04158970015123
+    },
+    {
+      "params": {
+        "forgets": false,
+        "max_guess": 0.5,
+        "max_slip": 0.5
+      },
+      "valid_auc": 0.7087849183276052,
+      "secs": 88.24392420006916
+    },
+    {
+      "params": {
+        "forgets": true,
+        "max_guess": 0.5,
+        "max_slip": 0.3
+      },
+      "valid_auc": 0.7135947896329489,
+      "secs": 123.84242909983732
+    }
+  ]
+}

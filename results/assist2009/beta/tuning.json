@@ -1,0 +1,120 @@
+{
+  "valid_fold": 0,
+  "budget": 12,
+  "best_params": {
+    "half_life": null,
+    "prior": "skill",
+    "prior_strength": 8.0
+  },
+  "best_valid_auc": 0.6999819857268053,
+  "trials": [
+    {
+      "params": {
+        "half_life": 10,
+        "prior": "skill",
+        "prior_strength": 8.0
+      },
+      "valid_auc": 0.6942009830144206,
+      "secs": 0.35779889998957515
+    },
+    {
+      "params": {
+        "half_life": null,
+        "prior": "fixed",
+        "prior_strength": 1.0
+      },
+      "valid_auc": 0.6898180517368906,
+      "secs": 0.1071603000164032
+    },
+    {
+      "params": {
+        "half_life": 5,
+        "prior": "fixed",
+        "prior_strength": 8.0
+      },
+      "valid_auc": 0.6835072290613349,
+      "secs": 0.11777480016462505
+    },
+    {
+      "params": {
+        "half_life": 10,
+        "prior": "fixed",
+        "prior_strength": 1.0
+      },
+      "valid_auc": 0.6856220514641405,
+      "secs": 0.15178419998846948
+    },
+    {
+      "params": {
+        "half_life": 3,
+        "prior": "skill",
+        "prior_strength": 1.0
+      },
+      "valid_auc": 0.6917346476082964,
+      "secs": 0.33228700002655387
+    },
+    {
+      "params": {
+        "half_life": null,
+        "prior": "skill",
+        "prior_strength": 8.0
+      },
+      "valid_auc": 0.6999819857268053,
+      "secs": 0.32418909994885325
+    },
+    {
+      "params": {
+        "half_life": 3,
+        "prior": "fixed",
+        "prior_strength": 4.0
+      },
+      "valid_auc": 0.681017502751188,
+      "secs": 0.10943559999577701
+    },
+    {
+      "params": {
+        "half_life": null,
+        "prior": "fixed",
+        "prior_strength": 2.0
+      },
+      "valid_auc": 0.6898180517368906,
+      "secs": 0.11327419988811016
+    },
+    {
+      "params": {
+        "half_life": 10,
+        "prior": "skill",
+        "prior_strength": 4.0
+      },
+      "valid_auc": 0.6985187777511865,
+      "secs": 0.34562409995123744
+    },
+    {
+      "params": {
+        "half_life": 20,
+        "prior": "skill",
+        "prior_strength": 2.0
+      },
+      "valid_auc": 0.6980969246946643,
+      "secs": 0.363872499903664
+    },
+    {
+      "params": {
+        "half_life": 50,
+        "prior": "fixed",
+        "prior_strength": 8.0
+      },
+      "valid_auc": 0.6891266330293453,
+      "secs": 0.11347599979490042
+    },
+    {
+      "params": {
+        "half_life": null,
+        "prior": "fixed",
+        "prior_strength": 8.0
+      },
+      "valid_auc": 0.6898180517368906,
+      "secs": 0.11088959989137948
+    }
+  ]
+}

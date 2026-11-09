@@ -1,0 +1,41 @@
+{
+  "auc": 0.7187906235897793,
+  "acc": 0.7105111433626911,
+  "brier": 0.1931705558854693,
+  "ece": 0.0496197465858736,
+  "logloss": 0.5699295994329604,
+  "n": 50299,
+  "cold_start": {
+    "1-5": {
+      "auc": 0.7300662629454098,
+      "n": 3714
+    },
+    "6-20": {
+      "auc": 0.7505322069821594,
+      "n": 7918
+    },
+    "21+": {
+      "auc": 0.7108110078859307,
+      "n": 38667
+    }
+  },
+  "infer_secs": 0.14883930003270507,
+  "infer_us_per_answer": 2.914474535093796,
+  "dataset": "assist2009",
+  "config": "beta",
+  "model": "beta",
+  "run": 0,
+  "seed": 0,
+  "valid_fold": 0,
+  "train_secs": 0.2590824000071734,
+  "params": {
+    "prior": "skill",
+    "prior_strength": 2.0,
+    "half_life": 10,
+    "decay_unit": "steps"
+  },
+  "n_train_students": 2465,
+  "n_test_students": 770,
+  "history": null,
+  "python": "3.11.9"
+}

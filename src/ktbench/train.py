@@ -114,12 +114,13 @@ def main(argv: list[str] | None = None) -> None:
 
     aucs = []
     for run in runs:
-        print(f"[{cfg['dataset']}/{cfg['name']}] run {run}")
+        print(f"[{cfg['dataset']}/{cfg['name']}] run {run}", flush=True)
         r = run_one(cfg, run, df, meta, folds, args.results_dir, args.preds_dir, params)
         aucs.append(r["auc"])
         print(f"  test auc={r['auc']:.4f} acc={r['acc']:.4f} brier={r['brier']:.4f} "
-              f"ece={r['ece']:.4f} train={r['train_secs']:.1f}s")
-    print(f"[{cfg['dataset']}/{cfg['name']}] AUC {np.mean(aucs):.4f} +/- {np.std(aucs):.4f} over {len(aucs)} runs")
+              f"ece={r['ece']:.4f} train={r['train_secs']:.1f}s", flush=True)
+    print(f"[{cfg['dataset']}/{cfg['name']}] AUC {np.mean(aucs):.4f} +/- {np.std(aucs):.4f} over {len(aucs)} runs",
+          flush=True)
 
 
 if __name__ == "__main__":

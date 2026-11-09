@@ -59,8 +59,7 @@ of expanded multi-skill sequences leaks labels and inflates AUC (DKT on
 ASSISTments 2009: 0.8262 one-by-one vs. 0.7541 question-level all-in-one).
 
 **Do we need to go deep?** Gervet et al. [11] and Mandalapu et al. [12]
-[CHECK: confirm authors and venue of "Do we need to go deep? Knowledge tracing
-with big data"] report that well-featured logistic regression models can
+report that well-featured logistic regression models can
 match deep models, especially on smaller datasets.
 
 ## 3. Data
@@ -278,7 +277,7 @@ Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and
 
 [1] A. T. Corbett and J. R. Anderson. Knowledge tracing: Modeling the acquisition of procedural knowledge. *User Modeling and User-Adapted Interaction*, 4(4):253–278, 1995.
 
-[2] A. Badrinath, F. Wang and Z. Pardos. pyBKT: An accessible Python library of Bayesian Knowledge Tracing models. *EDM*, 2021. [CHECK]
+[2] Badrinath, Wang, Pardos. pyBKT: An Accessible Python Library of Bayesian Knowledge Tracing Models. *EDM*, 2021. arXiv:2105.00385.
 
 [3] P. I. Pavlik Jr., H. Cen and K. R. Koedinger. Performance Factors Analysis – A new alternative to knowledge tracing. *AIED*, 2009.
 
@@ -286,7 +285,7 @@ Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and
 
 [5] M. Khajah, R. V. Lindsey and M. C. Mozer. How deep is knowledge tracing? *EDM*, 2016.
 
-[6] X. Xiong, S. Zhao, E. G. Van Inwegen and J. E. Beck. Going deeper with deep knowledge tracing. *EDM*, 2016. [CHECK]
+[6] Xiong, Zhao, Van Inwegen, Beck. Going Deeper with Deep Knowledge Tracing. *EDM*, 2016, pp. 545–550.
 
 [7] C.-K. Yeung and D.-Y. Yeung. Addressing two problems in deep knowledge tracing via prediction-consistent regularization. *L@S*, 2018.
 
@@ -296,13 +295,13 @@ Figures A1–A4 (appendix) show calibration, AUC by number of prior answers, and
 
 [10] Z. Liu, Q. Liu, J. Chen, S. Huang, J. Tang and W. Luo. pyKT: A Python library to benchmark deep learning based knowledge tracing models. *NeurIPS Datasets and Benchmarks*, 2022. arXiv:2206.11460.
 
-[11] T. Gervet, K. Koedinger, J. Schneider and T. Mitchell. When is deep learning the best approach to knowledge tracing? *Journal of Educational Data Mining*, 12(3), 2020. [CHECK]
+[11] Gervet, Koedinger, Schneider, Mitchell. When Is Deep Learning the Best Approach to Knowledge Tracing? *Journal of Educational Data Mining*, 12(3):31–54, 2020.
 
-[12] V. Mandalapu, J. Gong and L. Chen. Do we need to go deep? Knowledge tracing with big data. arXiv:2101.08349, 2021. [CHECK]
+[12] Mandalapu, Gong, Chen. Do we need to go Deep? Knowledge Tracing with Big Data. arXiv:2101.08349, 2021.
 
 [13] M. Feng, N. Heffernan and K. Koedinger. Addressing the assessment challenge with an online system that tutors as it assesses. *User Modeling and User-Adapted Interaction*, 19(3):243–266, 2009.
 
-[14] Y. Choi, Y. Lee, D. Shin, J. Cho, S. Park, S. Lee, J. Baek, C. Bae, B. Kim and J. Heo. EdNet: A large-scale hierarchical dataset in education. *AIED*, 2020.
+[14] Choi, Lee, Shin, Cho, Park, Lee, Baek, Bae, Kim, Heo. EdNet: A Large-Scale Hierarchical Dataset in Education. arXiv:1912.03072.
 
 ## Appendix: Figures
 

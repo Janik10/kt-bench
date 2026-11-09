@@ -60,7 +60,9 @@ def main(argv: list[str] | None = None) -> None:
         model.fit(split.train, split.valid)
         auc = metrics.auc(split.valid["correct"].to_numpy(), model.predict(split.valid))
         trials.append({"params": trial, "valid_auc": auc, "secs": time.perf_counter() - t0})
-        print(f"[{i + 1}/{len(picks)}] valid auc={auc:.4f} {trial}")
+        # Flushed so a redirected log shows progress while a long search runs.
+        print(f"{time.strftime('%Y-%m-%d %H:%M:%S')}  [{i + 1}/{len(picks)}] valid auc={auc:.4f} "
+              f"({trials[-1]['secs'] / 60:.1f} min) {trial}", flush=True)
 
     best = max(trials, key=lambda r: r["valid_auc"])
     out = args.results_dir / cfg["dataset"] / cfg["name"]
@@ -68,7 +70,7 @@ def main(argv: list[str] | None = None) -> None:
     (out / "tuning.json").write_text(json.dumps(
         {"valid_fold": VALID_FOLD, "budget": args.trials, "best_params": best["params"],
          "best_valid_auc": best["valid_auc"], "trials": trials}, indent=2))
-    print(f"best valid auc={best['valid_auc']:.4f} {best['params']}")
+    print(f"best valid auc={best['valid_auc']:.4f} {best['params']}", flush=True)
 
 
 if __name__ == "__main__":

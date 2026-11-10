@@ -4,6 +4,8 @@ author: "Jahangir"
 date: "Draft, November 2026"
 ---
 
+**Draft — Introduction and Discussion in progress**
+
 ## Abstract
 
 Knowledge tracing predicts whether a student will answer their next question
